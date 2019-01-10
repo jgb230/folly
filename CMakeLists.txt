@@ -1,6 +1,13 @@
 cmake_minimum_required(VERSION 3.0.2 FATAL_ERROR)
 # We use the GoogleTest module if it is available (only in CMake 3.9+)
 # It requires CMP0054 and CMP0057 to be enabled.
+message(${CMAKE_ROOT})
+set(BOOST_ROOT /home/jgb/mtsProject/ext/mts_outer/boost_1_64_0)
+set(BOOST_INCLUDEDIR /home/jgb/mtsProject/ext/mts_outer/boost_1_64_0/boost)
+set(BOOST_LIBRARYDIR /home/jgb/mtsProject/ext/mts_outer/boost_1_64_0/stage)
+message(${BOOST_ROOT})
+message(${BOOST_INCLUDEDIR})
+message(${BOOST_LIBRARYDIR})
 if (POLICY CMP0054)
   cmake_policy(SET CMP0054 NEW)
 endif()
@@ -188,6 +195,7 @@ add_library(folly_base OBJECT
   ${files} ${hfiles}
   ${CMAKE_CURRENT_BINARY_DIR}/folly/folly-config.h
 )
+set_target_properties(folly_base PROPERTIES COMPILE_FLAGS "-fPIC")
 auto_source_group(folly ${FOLLY_DIR} ${files} ${hfiles})
 apply_folly_compile_options_to_target(folly_base)
 # Add the generated files to the correct source group.
@@ -218,7 +226,7 @@ target_compile_definitions(folly_base
     $<TARGET_PROPERTY:folly_deps,INTERFACE_COMPILE_DEFINITIONS>
 )
 
-add_library(folly
+add_library(folly SHARED
   $<TARGET_OBJECTS:folly_base>
 )
 apply_folly_compile_options_to_target(folly)
